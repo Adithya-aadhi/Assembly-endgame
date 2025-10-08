@@ -44,7 +44,15 @@ section.game-status.lost {
   align-items: center;
   border-radius: 10px;
 }
-
+section.game-status.farewell {
+    background-color: #7A5EA7;
+    margin-top: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
 section.lang-chips{
   margin-top: 40px;
   display: flex;

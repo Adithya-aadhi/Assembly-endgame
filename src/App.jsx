@@ -2,11 +2,11 @@ import { useState } from 'react'
 import './App.css'
 import { languages } from './assets/lang'
 import  clsx  from 'clsx'
-
+import { randomword } from './assets/utils'
 
 export default function AssemblyEndgame() {
   //state
-  const [currentWord,setCurrentWord]=useState("react")
+  const [currentWord,setCurrentWord]=useState(randomword)
   const [guessed,setGuessed]=useState([])
 
   //derived 
@@ -40,6 +40,7 @@ export default function AssemblyEndgame() {
       <button 
             className={className}
             key={alph}
+            disabled={gameOver}
             onClick={()=>addGuessed(alph)}>
             {alph.toUpperCase()}
       </button>
@@ -58,17 +59,32 @@ export default function AssemblyEndgame() {
   })
 
   //the letter to guess
-  const letterEl=currentWord.split("").map((letter,index)=>(
-    <span key={index}>{guessed.includes(letter)?letter.toUpperCase():""}</span>
-  ))
+  const letterEl=currentWord.split("").map((letter,index)=>{
+    const reveal =gameLost ||guessed.includes(letter)
+    return(
+    <span key={index}>
+      {reveal?letter.toUpperCase():""}
+    </span>
+    )
+})
   
+  function getFarewellText(langName) {
+  return `Oops! You lost ${langName}`;
+}
+
   const gameStatusClass=clsx("game-status",{
     won:gameWon,
-    lost:gameLost
+    lost:gameLost,
+    farewell: !gameOver && lastGuessIncorrect
+
   })
   function renderStatus(){
     if(!gameOver && lastGuessIncorrect){
-      return <h1>Fuck you </h1>
+      return (<p 
+                className="farewell-message"
+                >
+              {getFarewellText(languages[wrongGuess - 1].name)}
+                </p>)
     }
     if(gameWon){
       return(
@@ -87,6 +103,10 @@ export default function AssemblyEndgame() {
       )
     }
   }
+    function newGame(){
+        setCurrentWord(randomword())
+        setGuessed([])
+    }
 
   return ( 
     <main> 
@@ -106,7 +126,7 @@ export default function AssemblyEndgame() {
       <section className='keys'>
           {keyEl}
       </section>
-      {gameOver && (<button className='newgame'>New game</button>)}
+      {gameOver && (<button className='newgame' onClick={newGame}>New game</button>)}
     </main>
   )
 }
