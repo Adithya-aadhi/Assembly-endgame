@@ -3,6 +3,7 @@ import './App.css'
 import { languages } from './assets/lang'
 import  clsx  from 'clsx'
 import { randomword } from './assets/utils'
+import Confetti from "react-confetti"
 
 export default function AssemblyEndgame() {
   //state
@@ -110,6 +111,10 @@ export default function AssemblyEndgame() {
 
   return ( 
     <main> 
+      {
+    gameWon && <Confetti width={window.innerWidth} height={window.innerHeight} />
+}
+
       <header>
         <h1>Assembly Endgame</h1>
         <p>Guess the word to stfu</p>
