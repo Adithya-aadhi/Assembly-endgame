@@ -14,7 +14,9 @@ export default function AssemblyEndgame() {
   const gameWon = currentWord.split("").every(letter =>guessed.includes(letter))
   const gameLost = wrongGuess >= 8
   const gameOver = gameWon || gameLost
-
+  const lastguessed =guessed[guessed.length-1]
+  const lastGuessIncorrect=lastguessed && !currentWord.includes(lastguessed)
+  
   //static
   const alphabets="abcdefghijklmnopqrstuvwxyz"
 
@@ -59,7 +61,32 @@ export default function AssemblyEndgame() {
   const letterEl=currentWord.split("").map((letter,index)=>(
     <span key={index}>{guessed.includes(letter)?letter.toUpperCase():""}</span>
   ))
-
+  
+  const gameStatusClass=clsx("game-status",{
+    won:gameWon,
+    lost:gameLost
+  })
+  function renderStatus(){
+    if(!gameOver && lastGuessIncorrect){
+      return <h1>Fuck you </h1>
+    }
+    if(gameWon){
+      return(
+        <>
+          <h2>You Win!</h2>
+          <p>Congrats !!</p>
+        </>
+      )
+    }
+    if(gameLost){
+      return(
+        <>
+          <h2>You Lose!</h2>
+          <p>Better luck next time!</p>
+        </>
+      )
+    }
+  }
 
   return ( 
     <main> 
@@ -67,22 +94,8 @@ export default function AssemblyEndgame() {
         <h1>Assembly Endgame</h1>
         <p>Guess the word to stfu</p>
       </header>
-      <section className={clsx("game-status",{
-        "win":gameWon,
-        "lose":gameLost
-      })}>  
-         {gameWon && (
-            <>
-              <h2>You Win!</h2>
-              <p>Congrats !!</p>
-            </>
-        )}
-          {gameLost && (
-            <>
-              <h2>You Lose!</h2>
-              <p>Better luck next time!</p>
-            </>
-          )}
+      <section className={gameStatusClass}>
+        {renderStatus()}
       </section>
       <section className="lang-chips">
           {langEl}
